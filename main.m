@@ -1,1 +1,0 @@
-% Das wird die Main-funktion
