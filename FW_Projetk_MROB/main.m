@@ -1,1 +1,1 @@
-clear all
+% Das wird die Main-funktion
