@@ -1,7 +1,7 @@
 %% 3D-Visualisierung des fahrenden Rovers mit Hindernissen, Start & Ziel
 % clear; close all; clc;
 
-figure;                                             % öffnet neues Grafikfenster
+figure(1);                                          % öffnet neues Grafikfenster
 axis equal;                                         % Achsen sollen die selbe Skalierung haben
 grid on;                                            % aktiviert das Hintergrundraster
 xlabel('X [m]'); ylabel('Y [m]'); zlabel('Z [m]');  % Achsen beschriften
@@ -10,47 +10,44 @@ view(45, 30);                                       % 3D-Perspektive (45 Grad um
 hold on;                                            % hält aktuellen Plot, damit man mehrere Elemente hinzufügen kann
 title('3D-Visualisierung des fahrenden Rovers');
 
-%% --- Start- & Zielpunkt als Kugeln darstellen ---
-[xs, ys, zs] = sphere(20);  % Kugeloberfläche erstellen mit 20er Auflösung
-r_kugel = 0.1;  % Kugelradius
 
-% Startpunkt: grün
-% surf = zeichnet 3D-Oberfläche / Kugeloberfläche
-start = surf(xs*r_kugel + sp(1), ys*r_kugel + sp(2), zs*r_kugel + 0.05, ... % Größe der Kugel (zB: xs*r_kugel) und Verschiebung auf den Achsen (zB: sp(1))
-     'FaceColor', 'green', 'EdgeColor', 'none');                            % z-Achse nach oben verschieben mit 0.05, damit Punkt auf "Boden"
+%% --- Start- & Zielpunkt ---
+% Startpunkt (grün, Marker 'o', Größe 10)
+plot3(sp(1), sp(2), 0.05, 'go', 'MarkerSize', 6, 'MarkerFaceColor', 'g'); % zeichnet 3D-Raum z=0.05 "Leicht über Boden"
+text(sp(1) - 0.2, sp(2), 0.05 - 0.4, 'Start', 'FontSize', 8, 'Color', 'g'); % -0.2 für nach unten versetzen
 
-% Zielpunkt: rot
-ziel = surf(xs*r_kugel + zp(1), ys*r_kugel + zp(2), zs*r_kugel + 0.05, ...  % Hier selbe für Zielpunkt jedoch rote Farbe
-     'FaceColor', 'red', 'EdgeColor', 'none');
+% Zielpunkt (rot, Marker 'o', Größe 10)
+plot3(zp(1), zp(2), 0.05, 'ro', 'MarkerSize', 6, 'MarkerFaceColor', 'r');
+text(zp(1), zp(2), 0.05 - 0.3, 'Ziel', 'FontSize', 8, 'Color', 'r');
 
 %% --- Hindernisse ---
 % Parameter für die Kreise
-theta = linspace(0, 2*pi, 50); % Kreiswinkel (0 = Startwert [0 Grad]; 2*pi = Endwert [360 Grad] volle Drehung)
-                               % 50 = 50 Punkte zwischen 0 und 2pi gleichmäßig (für Glätte) 
+theta = linspace(0, 2*pi, 50); % Winkel für den Kreis von 0 bis 2pi
 
-% Hindernis 1
-r1 = 0.5;                     % Radius [m]
-x1 = 2; y1 = 2; z1 = 0;       % Mittelpunkt des Kreises; z = 0, weil auf "Boden"
-
-plot3(x1 + r1*cos(theta), y1 + r1*sin(theta), z1*ones(size(theta)), 'r', 'LineWidth', 2);
-% plot3 zeichnet 3D Linie basierend XYZ; Kreis um x1 zentrieren
-% r1*cos(theta) verschiebt Mittelpunkt nach rechts/links
-% ones: erzeugt Array voller 1 genauso viele wie theta Werte (50)
 hold on;
+for i = 1:size(Hindernisse,1) % Schleife über alle Hindernisse; size gibt Anzahl der Zeilen zrk.
+                              % ,1 = Anzahl der Zeilen von Matrix; ,2 wäre Spalten 
+    x = Hindernisse(i,1);
+    y = Hindernisse(i,2);
+    r = Hindernisse(i,3);
+    z = 0; % alle auf Boden
 
-% Hindernis 2
-r2 = 0.7;
-x2 = 4; y2 = 1; z2 = 0;
-plot3(x2 + r2*cos(theta), y2 + r2*sin(theta), z2*ones(size(theta)), 'r', 'LineWidth', 2);
+    plot3(x + r*cos(theta), y + r*sin(theta), z*ones(size(theta)), 'r', 'LineWidth', 2);
+    % ones(size(theta)) erzeugt Vektor mit gleichen Länge wie theta
+end
 
-% Hindernis 3
-r3 = 0.6;
-x3 = 3; y3 = 4; z3 = 0;
-plot3(x3 + r3*cos(theta), y3 + r3*sin(theta), z3*ones(size(theta)), 'r', 'LineWidth', 2);
+%% --- Rover ---
+% Richtung vom Startpunkt zum Zielpunkt
+richtung = zp - sp; % zeigt vom Start zum Ziel
+richtung = richtung / norm(richtung);  % Normalisieren damit genau 1 lang, damit Länge kontrolliert werden kann mit z.B. roverl
 
-hold off;
+% Skalierung des Richtungspfeils ("Roverlänge")
+roverl;
 
-%% --- ROVER ---
+% Endpunkt des Pfeils berechnen
+endpunkt = sp + roverl * richtung; 
 
-% Körper als Quader
-% rover_koerper = rover_l * rover_b * rover_h;
+% 3D-Pfeil zeichnen mit quiver3
+quiver3(sp(1), sp(2), 0.05, ...    % Startpunkt: (0, 0, 0.05)
+        richtung(1), richtung(2), 0.02, ...  % Richtung: (0.7071, 0.7071, 0.02)
+        roverl, 'Color', 'k', 'LineWidth', 2, 'MaxHeadSize', 2); % Länge des Pfeiles + Eigenschaften
