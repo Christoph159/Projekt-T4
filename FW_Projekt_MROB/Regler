@@ -1,0 +1,50 @@
+function [vx, vy, omega, i_out] = P_Regler(x_pfad, y_pfad, x, y, psi, i_in)
+%#codegen
+
+% Reglerparameter
+Kp_pos    = 2.0;
+Kp_phi    = 0.0;    % Ausschalten der Drehung während Fahrt
+tol_dist  = 0.1;
+max_v     = 2.0;
+max_omega = 1.0;
+
+% Index-Initialisierung
+i = max(1, min(i_in, length(x_pfad)));
+
+% Sollpunkt
+x_soll = x_pfad(i);
+y_soll = y_pfad(i);
+
+% Fehlerberechnung
+fehler_x = x_soll - x;
+fehler_y = y_soll - y;
+entfernung = sqrt(fehler_x^2 + fehler_y^2);
+
+% Zielwinkel (optional)
+winkel_zum_ziel = atan2(fehler_y, fehler_x);
+fehler_phi = atan2(sin(winkel_zum_ziel - psi), cos(winkel_zum_ziel - psi));
+
+% Wegpunkt erreicht?
+if entfernung < tol_dist && i < length(x_pfad)
+    i = i + 1;
+end
+
+% Positionsregler
+vx = Kp_pos * fehler_x;
+vy = Kp_pos * fehler_y;
+
+% Geschwindigkeit begrenzen
+v_norm = norm([vx, vy]);
+if v_norm > max_v
+    vx = vx / v_norm * max_v;
+    vy = vy / v_norm * max_v;
+end
+
+% Orientierung optional ignorieren
+omega = Kp_phi * fehler_phi;
+omega = max(min(omega, max_omega), -max_omega);
+
+% Ausgabe
+i_out = i;
+
+end
