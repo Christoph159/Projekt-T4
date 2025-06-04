@@ -10,11 +10,17 @@ view(45, 30);                                       % 3D-Perspektive (45 Grad um
 hold on;                                            % hält aktuellen Plot, damit man mehrere Elemente hinzufügen kann
 title('3D-Visualisierung des fahrenden Rovers');
 
-%% --- Start- & Zielpunkt ---
-% Startpunkt (grün, Marker 'o', Größe 10)
-plot3(sp(1), sp(2), 0.05, 'go', 'MarkerSize', 6, 'MarkerFaceColor', 'g'); % zeichnet 3D-Raum z=0.05 "Leicht über Boden"
-text(sp(1) - 0.2, sp(2), 0.05 - 0.4, 'Start', 'FontSize', 8, 'Color', 'g'); % -0.2 für nach unten versetzen
+%% --- Start- & Zielpunkt als Kugeln darstellen ---
+[xs, ys, zs] = sphere(20);  % Kugeloberfläche erstellen mit 20er Auflösung
+r_kugel = 0.1;  % Kugelradius
 
-% Zielpunkt (rot, Marker 'o', Größe 10)
-plot3(zp(1), zp(2), 0.05, 'ro', 'MarkerSize', 6, 'MarkerFaceColor', 'r');
-text(zp(1), zp(2), 0.05 - 0.3, 'Ziel', 'FontSize', 8, 'Color', 'r');
+% Startpunkt: grün
+% surf = zeichnet 3D-Oberfläche / Kugeloberfläche
+start = surf(xs*r_kugel + sp(1), ys*r_kugel + sp(2), zs*r_kugel + 0.05, ... % Größe der Kugel (zB: xs*r_kugel) und Verschiebung auf den Achsen (zB: sp(1))
+     'FaceColor', 'green', 'EdgeColor', 'none');                            % z-Achse nach oben verschieben mit 0.05, damit Punkt auf "Boden"
+text(sp(1) -0.2 , sp(2), 0.05 -0.4, 'Start', 'FontSize', 8, 'Color', 'g');  % Text hinzufügen
+
+% Zielpunkt: rot
+ziel = surf(xs*r_kugel + zp(1), ys*r_kugel + zp(2), zs*r_kugel + 0.05, ...  % Hier selbe für Zielpunkt jedoch rote Farbe
+     'FaceColor', 'red', 'EdgeColor', 'none')
+text(zp(1), zp(2), 0.05 -0.3, 'Ziel', 'FontSize', 8, 'Color', 'r');  % Text hinzufügen
