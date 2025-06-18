@@ -1,0 +1,44 @@
+function [vx, vy, omega, i_out] = P_Regler(x, y, psi, i_in, x_pfad, y_pfad)
+%#codegen
+
+% Reglerparameter
+Kp_pos    = 5.0;
+Kp_phi    = 0.0;    % Kp_phi = 0 -> Drehung während Fahrt nicht berücksichtigt
+tol_dist  = 0.1;
+max_omega = 1.0;
+
+% Index-Initialisierung und stellt sicher dass der Index im gültigen
+% Bereich liegt
+i = max(1, min(i_in, length(x_pfad)));
+
+% Sollpunkt
+x_soll = x_pfad(i);
+y_soll = y_pfad(i);
+
+% Fehlerberechnung
+fehler_x = x_soll - x;
+fehler_y = y_soll - y;
+entfernung = sqrt(fehler_x^2 + fehler_y^2);
+
+% Zielwinkel (optional)
+winkel_zum_ziel = atan2(fehler_y, fehler_x);
+fehler_phi = atan2(sin(winkel_zum_ziel - psi), cos(winkel_zum_ziel - psi));
+
+% Wegpunkt erreicht?!->nächsten waypoint holen i++
+if entfernung < tol_dist && i < length(x_pfad)
+    i = i + 1;
+end
+
+% Positionsregler
+vx = Kp_pos * fehler_x;
+vy = Kp_pos * fehler_y;
+
+% 
+% Orientierung optional ignorieren
+omega = Kp_phi * fehler_phi;
+omega = max(min(omega, max_omega), -max_omega);
+
+% Ausgabe
+i_out = i;
+
+end
