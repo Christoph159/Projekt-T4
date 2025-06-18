@@ -1,0 +1,25 @@
+function [dx, dy, dpsi]  = fcn(dtheta, phi, psi, rover_radr, roverb, X_sp, Y_sp)
+
+%Initialisierung als Skalar
+dx = X_sp;
+dy = Y_sp;
+dpsi = 0;
+
+%Rotationsmatrix
+rmatrix=[cos(psi) sin(psi) 0; -sin(psi) cos(psi) 0; 0 0 1 ];
+
+%berechnet die translatorische und rotatorische Geschwindigkeit des Roboters im lokalen Koordinatensystem
+m2 = [rover_radr/4 * (dtheta(1)*cos(phi(1)) + dtheta(2)*cos(phi(2)) + dtheta(3)*cos(phi(3)) +  dtheta(4)*cos(phi(4)));
+        
+      rover_radr/4 * (dtheta(1)*sin(phi(1)) + dtheta(2)*sin(phi(2)) + dtheta(3)*sin(phi(3)) +  dtheta(4)*sin(phi(4)));
+
+      rover_radr/2*roverb * (dtheta(1)*cos(phi(1)) - dtheta(2)*cos(phi(2)) - dtheta(3)*cos(phi(3)) +  dtheta(4)*cos(phi(4))) ];
+
+
+%rotiert sie in globale Koordinaten
+dxdydpsi = rmatrix * m2;
+
+
+dx = dxdydpsi(1);
+dy = dxdydpsi(2) ;
+dpsi = dxdydpsi(3);
