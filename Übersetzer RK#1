@@ -1,0 +1,19 @@
+function [dtheta, phi] = uebersetzer(vx, vy, omega , roverb, roverl, rover_radr)
+%%%%%%(RK#1)%%%%%%%%%%
+% Vorberechnung
+b2 = roverb/2;
+l2 = roverl/2;
+
+% Lenkwinkel phi_i
+phi = zeros(4,1); % erstellt Vektor 4x1 mit 0er
+phi(1) = atan2(vy + omega * l2, vx + omega * b2);
+phi(2) = atan2(vy + omega * l2, vx - omega * b2);
+phi(3) = atan2(vy - omega * l2, vx - omega * b2);
+phi(4) = atan2(vy - omega * l2, vx + omega * b2);
+
+% Radgeschwindigkeiten theta_dot_i
+dtheta = zeros(4,1);
+dtheta(1) = (1/rover_radr) * sqrt((vx + omega * b2)^2 + (vy + omega * l2)^2);
+dtheta(2) = (1/rover_radr) * sqrt((vx - omega * b2)^2 + (vy + omega * l2)^2);
+dtheta(3) = (1/rover_radr) * sqrt((vx - omega * b2)^2 + (vy - omega * l2)^2);
+dtheta(4) = (1/rover_radr) * sqrt((vx + omega * b2)^2 + (vy - omega * l2)^2);
