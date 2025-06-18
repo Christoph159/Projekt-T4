@@ -1,2 +1,1 @@
-Die Formeln für die Radkinematik habe ich von Mobile Roboter Skript entnommen.
-Formeln habe ich als Code in Simulink, als Matlab Function Block implementiert.
+Die Radkinematik-Formeln (Übersetzer RK#1) stammen aus dem Mobile-Roboter-Skript und wurden als MATLAB Function Block in Simulink implementiert.
