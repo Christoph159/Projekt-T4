@@ -12,7 +12,7 @@ hindernisse = [1, 2, 0.5; 2, 3, 0.8; 4, 4, 0.4];  % Hindernisse [x y r]
                                                   % wenn nur 2 Hindernisse, dann letzten 3 auskommentieren
 X_sp = sp(1); Y_sp = sp(2);
 
-%% 3D-Visualisierung des fahrenden Rovers mit schöner Welt
+%% 3D-Visualisierung der Rover-Welt
 figure(1); clf;
 axis equal; grid on; hold on;
 xlabel('X [m]'); ylabel('Y [m]'); zlabel('Z [m]');
