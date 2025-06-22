@@ -1,4 +1,4 @@
-Simulationsanleitung - Rover-Projekt
+*Simulationsanleitung - Rover-Projekt*
 
 Dateienübersicht:
 Laden Sie am besten alle sieben Dateien in einen gemeinsamen Ordner, um die Simulation korrekt auszuführen:
@@ -32,6 +32,6 @@ Komplette Simulation (inkl. Roverbewegung):
     - die Visualisierung aktualisiert (Top-Down-Ansicht)
     - die Entwicklung der Zustandsgrößen x, y und ψ (psi) im Scope dargestellt
 
-Wichtiger Hinweis
+_Wichtiger Hinweis_
 Bitte vermeiden Sie, den Startpunkt innerhalb eines Hindernisses zu platzieren – der Rover fährt in diesem Fall dennoch los, da keine Kollisionsprüfung zu Beginn erfolgt.
   
