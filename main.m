@@ -10,6 +10,7 @@ sp = [0, 0];           % Startpunkt
 zp = [5, 5];           % Zielpunkt
 hindernisse = [1, 2, 0.5; 2, 3, 0.8; 4, 4, 0.4];  % Hindernisse [x y r]
                                                   % wenn nur 2 Hindernisse, dann letzten 3 auskommentieren
+X_sp = sp(1); Y_sp = sp(2);
 
 %% 3D-Visualisierung des fahrenden Rovers mit schöner Welt
 figure(1); clf;
